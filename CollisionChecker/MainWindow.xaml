@@ -1,0 +1,20 @@
+﻿<Window x:Class="CollisionChecker.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Collision checker" AllowDrop="True" mc:Ignorable="d" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" Height="310" Width="549">
+    <Grid Height="256" Width="519" HorizontalAlignment="Stretch" VerticalAlignment="Top">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="187*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="134*" />
+        </Grid.ColumnDefinitions>
+        <TextBox Height="23" HorizontalAlignment="Left" Margin="20,66,0,0" Name="colDataPath" VerticalAlignment="Top" Width="434" Text="Enter path" Grid.ColumnSpan="2" />
+        <Button Content="..." Height="23" HorizontalAlignment="Left" Margin="468,66,0,0" Name="chooseCollisionFile" VerticalAlignment="Top" Width="22" Click="CollisionFileButton_Click" />
+        <Label Content="Collision Checker v0.1" Height="27" HorizontalAlignment="Left" Name="label1" VerticalAlignment="Top" Width="148" DataContext="{Binding}" FontWeight="Bold" Margin="0,-6,0,0" Grid.ColumnSpan="2" />
+        <Label Content="Collision data path:" Height="30" HorizontalAlignment="Left" Margin="20,38,0,0" Name="label2" VerticalAlignment="Top" Width="114" HorizontalContentAlignment="Center" />
+        <Button Content="Analyze" Height="23" HorizontalAlignment="Left" Margin="415,132,0,0" Name="analyzeButton" VerticalAlignment="Top" Width="75" Click="AnalyzeButton_Click" IsEnabled="False" />
+        <Button Content="Read data" Height="23" HorizontalAlignment="Left" Margin="415,103,0,0" Name="readExcelButton" VerticalAlignment="Top" Width="75" Click="ReadDataButton_Click" />
+        <Label Content="No data loaded" Height="28" HorizontalAlignment="Left" Name="statusLabel" VerticalAlignment="Bottom" Width="213" />
+    </Grid>
+</Window>
