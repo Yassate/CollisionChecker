@@ -23,9 +23,6 @@ namespace CollisionChecker
             RobotList = new List<Robot>();
         }
 
-        /// <summary>
-        /// Resets read values, necessary for each new data read.
-        /// </summary>
         private void ClearData()
         {
             CollisionList.Clear();
@@ -33,12 +30,6 @@ namespace CollisionChecker
             this.csvParser = null;
         }
 
-        /// <summary>
-        /// Checks file from given path exists and writes it to field.
-        /// </summary>
-        /// <param name="path">
-        /// Given path to file with input data (from form).
-        /// </param>
         public void SetRobotCollisionsPath(string path)
         {
             if (File.Exists(path))
@@ -47,9 +38,6 @@ namespace CollisionChecker
             }
         }           //ReadData() should take path as argument, then it should call pathCheck method and depends on result gives a message or continues reading
 
-        /// <summary>
-        /// Checks format of input data file and call required methods to read data from it.
-        /// </summary>
         public void ReadData()
         {
             string ext = Path.GetExtension(robotCollisionsPath);

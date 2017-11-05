@@ -99,7 +99,6 @@ namespace CollisionChecker
             return 3 + (3 ^ nr);
         }
 
-        //nie mozna porownywac pointerow bezposrednio http://www.aaronstannard.com/overriding-equality-in-dotnet/
     }
 }
 

@@ -4,13 +4,6 @@ namespace CollisionChecker
 {
     public static class ExtensionMethods
     {
-        /// <summary>
-        /// Compares two lists of robots only by name.
-        /// </summary>
-        /// <typeparam name="Robot"></typeparam>
-        /// <param name="firstToCompare"></param>
-        /// <param name="secondToCompare"></param>
-        /// <returns></returns>
         public static bool CompareRobotListByName<Robot>(this List<Robot> firstToCompare, List<Robot> secondToCompare)
         {
             int found = 0;

@@ -21,9 +21,6 @@ namespace CollisionChecker
             InitializeExcelFile();
         }
 
-        /// <summary>
-        /// Creates sheets, name's them, then applies basic formatting.
-        /// </summary>
         public void InitializeExcelFile()
         {
             Excel._Worksheet excelSheet;
@@ -43,18 +40,12 @@ namespace CollisionChecker
             allCells.VerticalAlignment = Excel.XlVAlign.xlVAlignCenter;
         }
 
-        /// <summary>
-        /// Just shows excel application stored in excelApp variable.
-        /// </summary>
         public void ShowExcelFile()
         {
             excelApp.Visible = true;
             excelApp.ScreenUpdating = true;
         }
 
-        /// <summary>
-        /// Fills "Collision Overview" tab in output excel file.
-        /// </summary>
         public void SaveCollisionDataToExcel()
         {
             foreach (var robot in RobotList)
@@ -63,9 +54,6 @@ namespace CollisionChecker
             }
         }
 
-        /// <summary>
-        /// Writes current cell state (each robot state) to output excel file.
-        /// </summary>
         public void SaveCellStateToExcel()
         {
             int rowNr = this.startRowNr, colNr = this.startColNr;
@@ -79,9 +67,6 @@ namespace CollisionChecker
             this.startRowNr += 2;
         }
 
-        /// <summary>
-        /// Closes excel app and releases excel COM object (to avoid leaving open excel processes in background).
-        /// </summary>
         public void closeExcelProcess()
         {
             excelWorkbook.Close(false);
@@ -90,9 +75,6 @@ namespace CollisionChecker
             System.Runtime.InteropServices.Marshal.ReleaseComObject(excelApp);
         }
 
-        /// <summary>
-        /// Writes current cell state (each robot state) to output txt file (debugging purposes).
-        /// </summary>
         public void WriteCellStateToFile()
         {
             string temp = "";
@@ -104,10 +86,6 @@ namespace CollisionChecker
             temp = "";
         }
 
-        /// <summary>
-        /// Writes single line to output txt file (debugging purposes).
-        /// </summary>
-        /// <param name="line"></param>
         public void WriteLineToFile(string line)
         {
             StreamWriter streamWriter = new StreamWriter("D:\\Private\\Siszarp\\!Projects\\CollisionChecker\\extData\\write.txt", append: true);
