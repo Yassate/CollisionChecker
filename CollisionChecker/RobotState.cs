@@ -2,7 +2,7 @@
 
 namespace CollisionChecker
 {
-    class RobotState
+    public class RobotState
     {
         public List<Collision> takenColls = new List<Collision>();
         public Collision wantedColl;

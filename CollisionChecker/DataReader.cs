@@ -1,24 +1,28 @@
-﻿using System;
+﻿using Microsoft.VisualBasic.FileIO;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Windows;
-using Microsoft.VisualBasic.FileIO;
 using Excel = Microsoft.Office.Interop.Excel;
 
 namespace CollisionChecker
 {
-    class DataReader
+    public class DataReader
     {
-        public List<Collision> CollisionList { get; set; }
-        public List<Robot> RobotList { get; set; }
+        private IFilePathChecker filePathChecker;
+        private INotifier notifier;
+        public List<Collision> CollisionList { get; }
+        public List<Robot> RobotList { get; }
         private TextFieldParser csvParser;
-        private string robotCollisionsPath;
+        private string inputFilePath;
         private Excel.Application excelApp;
         private Excel.Workbooks excelWorkbooks;
         private Excel._Workbook excelWorkbook;
 
-        public DataReader()
+        public DataReader(string inputFilePath, INotifier notifier)
         {
+            this.notifier = notifier;
+            this.inputFilePath = inputFilePath;
             CollisionList = new List<Collision>();
             RobotList = new List<Robot>();
         }
@@ -30,24 +34,16 @@ namespace CollisionChecker
             this.csvParser = null;
         }
 
-        public void SetRobotCollisionsPath(string path)
-        {
-            if (File.Exists(path))
-            {
-                this.robotCollisionsPath = path;
-            }
-        }           //ReadData() should take path as argument, then it should call pathCheck method and depends on result gives a message or continues reading
-
         public void ReadData()
         {
-            string ext = Path.GetExtension(robotCollisionsPath);
-            bool isCsvTxt, isExcel;
-            isCsvTxt = String.Equals(ext, ".csv", StringComparison.OrdinalIgnoreCase) || String.Equals(ext, ".txt", StringComparison.OrdinalIgnoreCase);
-            isExcel = String.Equals(ext, ".xls", StringComparison.OrdinalIgnoreCase) || String.Equals(ext, ".xlsx", StringComparison.OrdinalIgnoreCase) || String.Equals(ext, ".xlsm", StringComparison.OrdinalIgnoreCase);
-            
-            if (isCsvTxt) ReadDataFromCsv();
-            else if (isExcel) ReadDataFromExcel();
-            else MessageBox.Show("File extension forbidden!");
+            string fileExtension = Path.GetExtension(inputFilePath).ToLower();
+            fileExtension.ToLower();
+
+            bool filetypeIsCsv = fileExtension.Equals(".csv") || fileExtension.Equals(".txt");
+            bool filetypeIsExcel = fileExtension.Equals(".xls") || fileExtension.Equals(".xlsx") || fileExtension.Equals(".xlsm");
+            if (filetypeIsExcel) ReadDataFromExcel();
+            else if (filetypeIsCsv) ReadDataFromCsv();
+            else notifier.ShowMessage("File extension forbidden!");
         }
 
         #region CSV file read
@@ -55,13 +51,18 @@ namespace CollisionChecker
         public void ReadDataFromCsv()
         {
             ClearData();
-            this.csvParser = new TextFieldParser(robotCollisionsPath);
-            this.csvParser.CommentTokens = new string[] { "#" };
-            this.csvParser.SetDelimiters(new string[] { ";" });
-            this.csvParser.HasFieldsEnclosedInQuotes = false;
+            this.csvParser = new TextFieldParser(inputFilePath);
+            SetupCsvParser();
             ReadRobotsCollisionsFromCsv();
             ReadInterlockProcessFromCsv();
             this.csvParser.Close();
+        }
+
+        private void SetupCsvParser()
+        {
+            this.csvParser.CommentTokens = new string[] { "#" };
+            this.csvParser.SetDelimiters(new string[] { ";" });
+            this.csvParser.HasFieldsEnclosedInQuotes = false;
         }
 
         public void ReadRobotsCollisionsFromCsv()
@@ -78,8 +79,6 @@ namespace CollisionChecker
 
             while (line[0] != "Interlock Process")
             {
-                // Read current line fields, pointer moves to the next line.
-                
                 line = csvParser.ReadFields();
                 if (prevLine == null)
                 {
@@ -150,7 +149,7 @@ namespace CollisionChecker
             excelApp = new Excel.Application();
             ClearData();
             excelWorkbooks = excelApp.Workbooks;
-            excelWorkbook = excelWorkbooks.Open(robotCollisionsPath);
+            excelWorkbook = excelWorkbooks.Open(inputFilePath);
             ReadRobotsCollisionsFromExcel();
             ReadInterlockProcessFromExcel();
             closeExcelApp();

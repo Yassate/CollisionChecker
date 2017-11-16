@@ -1,40 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Linq;
 
 namespace CollisionChecker
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
     public partial class MainWindow : Window
     {
         private int stuckCount = 0;
-        private DataReader dataReader = new DataReader();
+        private DataReader dataReader;
         private DataWriter dataWriter;
         private List<Robot> robotList;
         private List<Collision> collisionList;
         private List<Robot> lastStuckRobots = new List<Robot>();
+        private FilePathChecker checker = new FilePathChecker();
 
         public MainWindow()
         {
             InitializeComponent();
-            //BackgroundWorker backgroundWorker1 = new BackgroundWorker();
-            //backgroundWorker1.WorkerReportsProgress = true;
             this.Drop += MainWindow_Drop;           //vor DragDrop; notUSED        
         }
 
-        /// <summary>
-        /// Releases every collision zone.
-        /// </summary>
         private void ResetCollisions()
         {
             foreach (var coll in collisionList) coll.ReleaseCollision();
         }
         
-        /// <summary>
-        /// Resets every robot CheckStarted flag.
-        /// </summary>
         private void ResetRobotsCheck()
         {
             foreach (var robot in robotList)
@@ -43,12 +34,6 @@ namespace CollisionChecker
             }
         }
 
-        /// <summary>
-        /// Checks if every robot can be in current state (if it can take every collision which it has in taken collision list).
-        /// </summary>
-        /// <returns>
-        /// True if possible, false otherwise.
-        /// </returns>
         private bool CheckCellStatePossible()
         {
             short inHomeSum = 0;
@@ -62,9 +47,6 @@ namespace CollisionChecker
             return true;
         }
 
-        /// <summary>
-        /// Performs every robot's movement status check.
-        /// </summary>
         private void SetRobotsMovementStatus()
         {
             foreach (var robot in robotList)
@@ -73,10 +55,6 @@ namespace CollisionChecker
             }
         }
 
-        /// <summary>
-        /// Checks if cell is stuck and if this particular stuck isn't caused by same robots as previous one.
-        /// </summary>
-        /// <returns>True if some of robots are stuck, otherwise returns false.</returns>
         private bool CheckCellStateStuck()
         {
             List<Robot> tempStuckRobots = new List<Robot>();
@@ -98,12 +76,6 @@ namespace CollisionChecker
             return false;
         }
 
-        /// <summary>
-        /// Designed for recurrent move through every possible cell state and finding dead locks in them. 
-        /// Found ones are saved into the file.
-        /// </summary>
-        /// <param name="actRobNr"></param>
-        /// <returns></returns>
         public bool IterateCellStates(int actRobNr = 0)
         {
             if (actRobNr == robotList.Count) return true;
@@ -165,10 +137,17 @@ namespace CollisionChecker
 
         private void ReadDataButton_Click(object sender, RoutedEventArgs e)
         {
-            dataReader.SetRobotCollisionsPath(colDataPath.Text);
+            if (checker.CheckExistence(colDataPath.Text))
+            {
+                dataReader = new DataReader(colDataPath.Text, new Notifier());
+            }
+            else return;
+
             dataReader.ReadData();
+
             this.robotList = dataReader.RobotList;
             this.collisionList = dataReader.CollisionList;
+
             if (this.robotList.Count == 0 || this.collisionList.Count == 0)
             {
                 this.robotList.Clear();

@@ -5,7 +5,7 @@ using System.IO;
 
 namespace CollisionChecker
 {
-    class DataWriter
+    public class DataWriter
     {
         //private List<Robot> RobotList = new List<Robot>();
         public List<Robot> RobotList { get; set; }

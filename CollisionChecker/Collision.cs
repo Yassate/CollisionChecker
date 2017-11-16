@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace CollisionChecker
 {
-    class Collision : IEquatable<Collision>, IComparer<Collision>
+    public class Collision : IEquatable<Collision>, IComparer<Collision>
     {
         public int nr = 0;
         public Robot Robot1, Robot2;
@@ -45,7 +45,7 @@ namespace CollisionChecker
         {
             if (comp1.nr < comp2.nr) return -1;
             else if (comp1.nr == comp2.nr) return 0;
-            else  return 1;
+            else return 1;
         }
 
         public static bool operator ==(Collision comp1, Collision comp2)

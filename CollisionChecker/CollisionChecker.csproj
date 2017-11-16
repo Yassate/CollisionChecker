@@ -91,6 +91,10 @@
     <Compile Include="DataReader.cs" />
     <Compile Include="DataWriter.cs" />
     <Compile Include="ExtensionMethods.cs" />
+    <Compile Include="FilePathChecker.cs" />
+    <Compile Include="IFilePathChecker.cs" />
+    <Compile Include="INotifier.cs" />
+    <Compile Include="Notifier.cs" />
     <Compile Include="Robot.cs" />
     <Compile Include="RobotState.cs" />
     <Page Include="MainWindow.xaml">

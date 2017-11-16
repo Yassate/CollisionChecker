@@ -5,7 +5,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace CollisionChecker
 {
-    class Robot : IEquatable<Robot>
+    public class Robot : IEquatable<Robot>
     {
         public string name;
         public List<Collision> collisionList = new List<Collision>();
@@ -25,10 +25,6 @@ namespace CollisionChecker
 
         public bool CheckStarted { get; set; }
 
-        /// <summary>
-        /// Adds a new collision if doesn't exist and sorts collision list.
-        /// </summary>
-        /// <param name="collision"></param>
         public void AddCollision(Collision collision)
         {
             if (!collisionList.Contains(collision)) collisionList.Add(collision);
@@ -36,10 +32,6 @@ namespace CollisionChecker
             collisionList.Sort(compMethod);
         }
 
-        /// <summary>
-        /// Changes active robot state to next one.
-        /// </summary>
-        /// <returns>True if succeed, false if actual state is the last one in the list.</returns>
         public bool SwitchToNextState()
         {
             if (this.activeRobotState < robotStates.Count-1)
@@ -57,10 +49,6 @@ namespace CollisionChecker
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         public bool TakeCurrentStateCollisions()
         {
             if (GetCurrentState().TakeCollisions()) return true;
