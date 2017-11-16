@@ -87,16 +87,17 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Const.cs" />
-    <Compile Include="DataReader.cs" />
-    <Compile Include="DataWriter.cs" />
-    <Compile Include="ExtensionMethods.cs" />
-    <Compile Include="FilePathChecker.cs" />
-    <Compile Include="IFilePathChecker.cs" />
-    <Compile Include="INotifier.cs" />
-    <Compile Include="Notifier.cs" />
-    <Compile Include="Robot.cs" />
-    <Compile Include="RobotState.cs" />
+    <Compile Include="AdditionalClasses\Const.cs" />
+    <Compile Include="DataClasses\DataReader.cs" />
+    <Compile Include="DataClasses\DataWriter.cs" />
+    <Compile Include="AdditionalClasses\ExtensionMethods.cs" />
+    <Compile Include="DataClasses\FilePathChecker.cs" />
+    <Compile Include="DataClasses\IDataReader.cs" />
+    <Compile Include="DataClasses\IFilePathChecker.cs" />
+    <Compile Include="DataClasses\INotifier.cs" />
+    <Compile Include="DataClasses\Notifier.cs" />
+    <Compile Include="LogicClasses\Robot.cs" />
+    <Compile Include="LogicClasses\RobotState.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -105,7 +106,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Collision.cs" />
+    <Compile Include="LogicClasses\Collision.cs" />
+    <Compile Include="LogicClasses\ViewModel.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -7,9 +7,8 @@ using Excel = Microsoft.Office.Interop.Excel;
 
 namespace CollisionChecker
 {
-    public class DataReader
+    public class DataReader : IDataReader
     {
-        private IFilePathChecker filePathChecker;
         private INotifier notifier;
         public List<Collision> CollisionList { get; }
         public List<Robot> RobotList { get; }

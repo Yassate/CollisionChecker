@@ -13,6 +13,10 @@ namespace CollisionChecker
         {
             if(File.Exists(filePath))
             {
+
+
+
+
                 return true;
             }
             else

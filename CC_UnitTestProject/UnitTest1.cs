@@ -11,8 +11,8 @@ namespace CC_UnitTestProject
         [TestMethod]
         public void should_create_robots_and_collisions()
         {
-            var TestedDataReader = new DataReader();
-            TestedDataReader.ReadData();
+            //var TestedDataReader = new DataReader();
+            //TestedDataReader.ReadData();
 
 
         }//
