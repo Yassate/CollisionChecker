@@ -14,15 +14,23 @@ namespace CollisionChecker
         private int stuckCount = 0;
         private IDataReader dataReader;
         private DataWriter dataWriter;
-        private FilePathChecker checker = new FilePathChecker();
+        private FilePathUtilities filePathUtilities = new FilePathUtilities();
+        private IDataReaderFactory dataReaderFactory;
+
+        public ViewModel(IDataReaderFactory dataReaderFactory)
+        {
+            this.dataReaderFactory = dataReaderFactory;
+        }
 
         public void readData(string filePath)
         {
-            if (checker.CheckExistence(filePath))
+            if (filePathUtilities.CheckExistence(filePath) == false)
             {
-                dataReader = new DataReader(filePath, new Notifier());
+                return;
             }
-            else return;
+
+            var fileType = filePathUtilities.getFileTypeByExtension(filePath);
+            if (fileType != Const.UNKNOWN) dataReader = dataReaderFactory.instance(fileType, filePath);
 
             dataReader.ReadData();
 

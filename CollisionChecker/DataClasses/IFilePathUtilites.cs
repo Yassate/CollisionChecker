@@ -1,6 +1,6 @@
 ﻿namespace CollisionChecker
 {
-    public interface IFilePathChecker
+    public interface IFilePathUtilites
     {
         bool CheckExistence(string filePath);
     }

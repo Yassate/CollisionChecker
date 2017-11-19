@@ -38,7 +38,7 @@ namespace CollisionChecker
 
         private void ReadDataButton_Click(object sender, RoutedEventArgs e)
         {
-            this.viewModel = new ViewModel();
+            this.viewModel = new ViewModel(new DataReaderFactory());
             viewModel.readData(colDataPath.Text);
 
             statusLabel.Content = "Data loaded.";
