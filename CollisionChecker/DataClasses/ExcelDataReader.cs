@@ -9,38 +9,38 @@ namespace CollisionChecker
 {
     public class ExcelDataReader : IDataReader
     {
-        public List<Collision> CollisionList { get; }
-        public List<Robot> RobotList { get; }
+        public List<Collision> CollisionSets { get; }
+        public List<Robot> Robots { get; }
         private Excel.Application excelApp;
         private Excel.Workbooks excelWorkbooks;
         private Excel._Workbook excelWorkbook;
         private string inputFilePath;
+        private readonly ICollectedDataChecker collectedDataChecker;
 
-        public ExcelDataReader(string inputFilePath)
+        public ExcelDataReader(string inputFilePath, ICollectedDataChecker collectedDataChecker)
         {
             this.inputFilePath = inputFilePath;
-            CollisionList = new List<Collision>();
-            RobotList = new List<Robot>();
+            this.collectedDataChecker = collectedDataChecker;
+            CollisionSets = new List<Collision>();
+            Robots = new List<Robot>();
         }
 
         public void ReadData()
         {
-            excelApp = new Excel.Application();
-            ClearData();
-            excelWorkbooks = excelApp.Workbooks;
+            InitExcelFile();
             excelWorkbook = excelWorkbooks.Open(inputFilePath);
-            ReadRobotsCollisionsFromExcel();
-            ReadInterlockProcessFromExcel();
+            ReadRobotsCollisions();
+            ReadInterlockProcess();
             closeExcelApp();
         }
 
-        private void ClearData()
+        private void InitExcelFile()
         {
-            CollisionList.Clear();
-            RobotList.Clear();
+            excelApp = new Excel.Application();
+            excelWorkbooks = excelApp.Workbooks;
         }
 
-        private void ReadRobotsCollisionsFromExcel()
+        private void ReadRobotsCollisions()
         {
             int colNr = 1, rowNr = 1;
             int lastColumn;
@@ -63,18 +63,18 @@ namespace CollisionChecker
             {
                 robotName1 = allCells[rowNr, colNr].Value;
                 robotName2 = allCells[rowNr, ++colNr].Value;
-                robot1 = RobotList.Find(x => x.name == robotName1);
-                robot2 = RobotList.Find(x => x.name == robotName2);
+                robot1 = Robots.Find(x => x.name == robotName1);
+                robot2 = Robots.Find(x => x.name == robotName2);
 
                 if (robot1 == null)
                 {
                     robot1 = new Robot(robotName1);
-                    RobotList.Add(robot1);
+                    Robots.Add(robot1);
                 }
                 if (robot2 == null)
                 {
                     robot2 = new Robot(robotName2);
-                    RobotList.Add(robot2);
+                    Robots.Add(robot2);
                 }
                 while (colNr <= lastColumn)
                 {
@@ -84,20 +84,20 @@ namespace CollisionChecker
                     Collision newCollision = new Collision(collisionNr, robot1, robot2);
                     robot1.AddCollision(newCollision);
                     robot2.AddCollision(newCollision);
-                    if (!CollisionList.Contains(newCollision)) CollisionList.Add(newCollision);
+                    if (!CollisionSets.Contains(newCollision)) CollisionSets.Add(newCollision);
                 }
                 colNr = 1;
                 rowNr++;
             } while (allCells[rowNr, colNr].Value != null);
         }
 
-        private void ReadInterlockProcessFromExcel()
+        private void ReadInterlockProcess()
         {
             foreach (Excel._Worksheet sheet in excelWorkbook.Sheets)
             {
                 if (sheet.Name.Substring(0, 2) == "HP") ReadHpInterlockProcess(sheet.Name);
             }
-            foreach (var robot in RobotList)
+            foreach (var robot in Robots)
             {
                 robot.CreateRobotStates();
             }
@@ -125,7 +125,7 @@ namespace CollisionChecker
             {
                 comment = activeSheet.Cells[rowNr, colNr].Value;
                 robotName = activeSheet.Cells[rowNr, ++colNr].Value;
-                robot = RobotList.Find(x => x.name == robotName);
+                robot = Robots.Find(x => x.name == robotName);
                 if (robot == null) return;
                 interlockProcess = activeSheet.Cells[rowNr, ++colNr].Value.Split(',');
 
@@ -139,6 +139,11 @@ namespace CollisionChecker
                 rowNr++;
                 colNr = 1;
             }
+        }
+
+        public bool DataIsValid()
+        {
+            return collectedDataChecker.Check(Robots, CollisionSets);
         }
     }
 }

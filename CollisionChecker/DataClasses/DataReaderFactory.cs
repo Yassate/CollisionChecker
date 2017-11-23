@@ -10,8 +10,8 @@ namespace CollisionChecker
         public IDataReader instance(int fileType, string inputFilePath)
         {
             IDataReader specificDataReader;
-            if (fileType == Const.CSV) specificDataReader = new CsvDataReader(inputFilePath);
-            else specificDataReader = new ExcelDataReader(inputFilePath);
+            if (fileType == Const.CSV) specificDataReader = new CsvDataReader(inputFilePath, new CollectedDataChecker(new Notifier()));
+            else specificDataReader = new ExcelDataReader(inputFilePath, new CollectedDataChecker(new Notifier()));
             return specificDataReader;
         }
     }

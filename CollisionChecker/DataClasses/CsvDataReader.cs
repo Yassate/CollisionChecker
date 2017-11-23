@@ -9,22 +9,24 @@ namespace CollisionChecker
 {
     public class CsvDataReader : IDataReader
     {
-        public List<Collision> CollisionList { get; } = new List<Collision>();
-        public List<Robot> RobotList { get; } = new List<Robot>();
+        public List<Collision> CollisionSets { get; } = new List<Collision>();
+        public List<Robot> Robots { get; } = new List<Robot>();
         private TextFieldParser csvParser;
         private string inputFilePath;
+        private readonly ICollectedDataChecker collectedDataChecker;
 
-        public CsvDataReader(string inputFilePath)
+        public CsvDataReader(string inputFilePath, ICollectedDataChecker collectedDataChecker)
         {
             this.inputFilePath = inputFilePath;
-            CollisionList = new List<Collision>();
-            RobotList = new List<Robot>();
+            this.collectedDataChecker = collectedDataChecker;
+            CollisionSets = new List<Collision>();
+            Robots = new List<Robot>();
         }
 
         private void ClearData()
         {
-            CollisionList.Clear();
-            RobotList.Clear();
+            CollisionSets.Clear();
+            Robots.Clear();
             this.csvParser = null;
         }
        
@@ -33,8 +35,8 @@ namespace CollisionChecker
             ClearData();
             this.csvParser = new TextFieldParser(inputFilePath);
             SetupCsvParser();
-            ReadRobotsCollisionsFromCsv();
-            ReadInterlockProcessFromCsv();
+            ReadRobotsCollisions();
+            ReadInterlockProcess();
             this.csvParser.Close();
         }
 
@@ -45,7 +47,7 @@ namespace CollisionChecker
             this.csvParser.HasFieldsEnclosedInQuotes = false;
         }
 
-        public void ReadRobotsCollisionsFromCsv()
+        private void ReadRobotsCollisions()
         {
             string[] prevLine = null, splitCollNrs = null;
             string[] line = new string[3];
@@ -67,17 +69,17 @@ namespace CollisionChecker
                 }
                 splitCollNrs = prevLine[2].Split(',');
 
-                robot1 = RobotList.Find(x => x.name == prevLine[0]);
-                robot2 = RobotList.Find(x => x.name == prevLine[1]);
+                robot1 = Robots.Find(x => x.name == prevLine[0]);
+                robot2 = Robots.Find(x => x.name == prevLine[1]);
                 if (robot1 == null)
                 {
                     robot1 = new Robot(prevLine[0]);
-                    RobotList.Add(robot1);
+                    Robots.Add(robot1);
                 }
                 if (robot2 == null)
                 {
                     robot2 = new Robot(prevLine[1]);
-                    RobotList.Add(robot2);
+                    Robots.Add(robot2);
                 }
 
                 foreach (var nr in splitCollNrs)
@@ -87,13 +89,13 @@ namespace CollisionChecker
                     Collision newCollision = new Collision(colNr, robot1, robot2);
                     robot1.AddCollision(newCollision);
                     robot2.AddCollision(newCollision);
-                    if (!CollisionList.Contains(newCollision)) CollisionList.Add(newCollision);
+                    if (!CollisionSets.Contains(newCollision)) CollisionSets.Add(newCollision);
                 }
                 prevLine = line;
             }
         }
 
-        public void ReadInterlockProcessFromCsv()
+        private void ReadInterlockProcess()
         {
             string[] line = null, prevLine = null;
             string robotName = null;
@@ -103,7 +105,7 @@ namespace CollisionChecker
             {
                 line = csvParser.ReadFields();
                 robotName = line[0];
-                var robot = RobotList.Find(x => x.name == robotName);
+                var robot = Robots.Find(x => x.name == robotName);
                 if (robot == null) return;
                 interlockProcess = line[1].Split(',');
                 foreach (var proc in interlockProcess)
@@ -115,11 +117,15 @@ namespace CollisionChecker
                 prevLine = line;
                 interlockProcessList = new List<int>();
             }
-            foreach (var robot in RobotList)
+            foreach (var robot in Robots)
             {
                 robot.CreateRobotStates();
             }
         }
 
+        public bool DataIsValid()
+        {
+            return collectedDataChecker.Check(Robots, CollisionSets);
+        }
     }
 }

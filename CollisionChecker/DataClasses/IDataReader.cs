@@ -4,9 +4,9 @@ namespace CollisionChecker
 {
     public interface IDataReader
     {
-        List<Robot> RobotList { get; }
-        List<Collision> CollisionList { get; }
-
+        List<Robot> Robots { get; }
+        List<Collision> CollisionSets { get; }
         void ReadData();
+        bool DataIsValid();
     }
 }

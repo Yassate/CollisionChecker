@@ -88,6 +88,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AdditionalClasses\Const.cs" />
+    <Compile Include="DataClasses\CollectedDataChecker.cs" />
     <Compile Include="DataClasses\CsvDataReader.cs" />
     <Compile Include="DataClasses\DataWriter.cs" />
     <Compile Include="AdditionalClasses\ExtensionMethods.cs" />
@@ -99,6 +100,7 @@
     <Compile Include="DataClasses\DataReaderFactory.cs" />
     <Compile Include="DataClasses\ExcelDataReader.cs" />
     <Compile Include="DataClasses\IDataReaderFactory.cs" />
+    <Compile Include="DataClasses\ICollectedDataChecker.cs" />
     <Compile Include="LogicClasses\Robot.cs" />
     <Compile Include="LogicClasses\RobotState.cs" />
     <Page Include="MainWindow.xaml">

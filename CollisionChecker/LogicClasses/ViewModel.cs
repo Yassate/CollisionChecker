@@ -8,18 +8,19 @@ namespace CollisionChecker
 {
     class ViewModel
     {
-        private List<Robot> robotList;
-        private List<Collision> collisionList;
+        private List<Robot> robots;
+        private List<Collision> collisionSets;
         private List<Robot> lastStuckRobots = new List<Robot>();
         private int stuckCount = 0;
         private IDataReader dataReader;
         private DataWriter dataWriter;
-        private FilePathUtilities filePathUtilities = new FilePathUtilities();
+        private FilePathUtilities filePathUtilities;
         private IDataReaderFactory dataReaderFactory;
 
-        public ViewModel(IDataReaderFactory dataReaderFactory)
+        public ViewModel(IDataReaderFactory dataReaderFactory, FilePathUtilities filePathUtilities)
         {
             this.dataReaderFactory = dataReaderFactory;
+            this.filePathUtilities = filePathUtilities;
         }
 
         public void readData(string filePath)
@@ -31,25 +32,25 @@ namespace CollisionChecker
 
             var fileType = filePathUtilities.getFileTypeByExtension(filePath);
             if (fileType != Const.UNKNOWN) dataReader = dataReaderFactory.instance(fileType, filePath);
+            else return;
 
             dataReader.ReadData();
-
-            robotList = dataReader.RobotList;
-            collisionList = dataReader.CollisionList;
-
-            if (robotList.Count == 0 || collisionList.Count == 0)
+            if (dataReader.DataIsValid())
             {
-                robotList.Clear();
-                collisionList.Clear();
-                MessageBox.Show("Data not loaded! Probably formatting is incorrect.");
-                return;
+                CollectDataFromReader();
             }
+        }
+
+        private void CollectDataFromReader()
+        {
+            robots = dataReader.Robots;
+            collisionSets = dataReader.CollisionSets;
         }
 
         public void analyzeData()
         {
             stuckCount = 0;
-            dataWriter = new DataWriter(robotList);
+            dataWriter = new DataWriter(robots);
             //StreamWriter streamWriter = new StreamWriter("D:\\Private\\Siszarp\\!Projects\\CollisionChecker\\extData\\write.txt");
             //streamWriter.Close();
             IterateCellStates();
@@ -68,12 +69,12 @@ namespace CollisionChecker
 
         public void ResetCollisions()
         {
-            foreach (var coll in collisionList) coll.ReleaseCollision();
+            foreach (var coll in collisionSets) coll.ReleaseCollision();
         }
 
         private void ResetRobotsCheck()
         {
-            foreach (var robot in robotList)
+            foreach (var robot in robots)
             {
                 robot.CheckStarted = false;
             }
@@ -83,18 +84,18 @@ namespace CollisionChecker
         {
             short inHomeSum = 0;
             ResetCollisions();
-            foreach (var rob in robotList)
+            foreach (var rob in robots)
             {
                 if (rob.InHome) inHomeSum++;
                 if (!rob.TakeCurrentStateCollisions()) return false;
             }
-            if (inHomeSum >= robotList.Count - 1) return false;
+            if (inHomeSum >= robots.Count - 1) return false;
             return true;
         }
 
         private void SetRobotsMovementStatus()
         {
-            foreach (var robot in robotList)
+            foreach (var robot in robots)
             {
                 robot.SetStoppedStatus();
             }
@@ -103,11 +104,11 @@ namespace CollisionChecker
         private bool CheckCellStateStuck()
         {
             List<Robot> tempStuckRobots = new List<Robot>();
-            foreach (var robot in robotList)
+            foreach (var robot in robots)
             {
                 ResetRobotsCheck();
                 robot.CheckStarted = true;
-                if (robot.IsStuckFirst(robotList.Count))
+                if (robot.IsStuckFirst(robots.Count))
                 {
                     tempStuckRobots.Add(robot);
                 }
@@ -123,7 +124,7 @@ namespace CollisionChecker
 
         public bool IterateCellStates(int actRobNr = 0)
         {
-            if (actRobNr == robotList.Count) return true;
+            if (actRobNr == robots.Count) return true;
             do
             {
                 if (IterateCellStates(actRobNr + 1))
@@ -137,7 +138,7 @@ namespace CollisionChecker
                         dataWriter.SaveCellStateToExcel();
                     }
                 }
-            } while (robotList[actRobNr].SwitchToNextState());
+            } while (robots[actRobNr].SwitchToNextState());
             return false;
         }
     }
