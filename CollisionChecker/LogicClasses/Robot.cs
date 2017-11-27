@@ -8,10 +8,10 @@ namespace CollisionChecker
     public class Robot : IEquatable<Robot>
     {
         public string name;
-        public List<Collision> collisionList = new List<Collision>();
+        private List<Collision> collisionList = new List<Collision>();
         public List<List<int>> interlockProcess2 = new List<List<int>>();
         public List<String> interlockProcessId = new List<String>();
-        public List<RobotState> robotStates = new List<RobotState>();
+        private List<RobotState> robotStates = new List<RobotState>();
         public bool stopped = false;
         public int activeRobotState = 0;
         public bool InHome { get; set; }
@@ -55,7 +55,7 @@ namespace CollisionChecker
             else return false;
         }
 
-        public void SaveCollisionListToExcel(Excel.Application excelApp)        //TODO
+        private void SaveCollisionListToExcel(Excel.Application excelApp)        //TODO
         {
             Excel.Workbook excelWorkbook = excelApp.ActiveWorkbook;
             Excel._Worksheet excelSheet = excelWorkbook.ActiveSheet;
@@ -66,7 +66,7 @@ namespace CollisionChecker
             }
         }
 
-        public void SaveDescriptionToExcel(Excel._Worksheet excelSheet, Excel.Range allCells, ref int rowNr, ref int colNr)
+        private void SaveDescriptionToExcel(Excel._Worksheet excelSheet, Excel.Range allCells, ref int rowNr, ref int colNr)
         {
             object firstRngCell, lastRngCell;
             Excel.Range operatingRange;
@@ -98,7 +98,7 @@ namespace CollisionChecker
             excelSheet.get_Range("C:C").Columns.AutoFit();
         }
 
-        public void SaveCollisionClearing(Excel.Range operatingRange, int collNumber, bool beforePos)
+        private void SaveCollisionClearing(Excel.Range operatingRange, int collNumber, bool beforePos)
         {
             operatingRange.Value = System.Math.Abs(collNumber);
             if (beforePos)
@@ -113,7 +113,7 @@ namespace CollisionChecker
             operatingRange.ColumnWidth = 3;
         }
 
-        public void SaveCollisionEntering(Excel.Range operatingRange, int collNumber, bool beforePos)
+        private void SaveCollisionEntering(Excel.Range operatingRange, int collNumber, bool beforePos)
         {
             operatingRange.Value = System.Math.Abs(collNumber);
 
@@ -129,7 +129,7 @@ namespace CollisionChecker
             operatingRange.ColumnWidth = 3;
         }
 
-        public void SaveCollisionComment(Excel.Range operatingRange, int collNumber)
+        private void SaveCollisionComment(Excel.Range operatingRange, int collNumber)
         {
             string targetRobotName;
             Collision currentCollision;

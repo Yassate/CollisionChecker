@@ -50,7 +50,7 @@ namespace CollisionChecker
         {
             foreach (var robot in RobotList)
             {
-                robot.SaveCollisionListToExcel(excelApp);
+               // robot.SaveCollisionListToExcel(excelApp);
             }
         }
 

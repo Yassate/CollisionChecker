@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CollisionChecker.LogicClasses;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,20 +10,22 @@ namespace CollisionChecker
 {
     public class ExcelDataReader : IDataReader
     {
-        public List<Collision> CollisionSets { get; }
-        public List<Robot> Robots { get; }
+        public List<Collision> CollisionSets { get; } = new List<Collision>();
+        public List<Robot> Robots { get; } = new List<Robot>();
         private Excel.Application excelApp;
         private Excel.Workbooks excelWorkbooks;
         private Excel._Workbook excelWorkbook;
         private string inputFilePath;
         private readonly ICollectedDataChecker collectedDataChecker;
+        private readonly IRobotFactory robotFactory;
+        private readonly ICollisionFactory collisionFactory;
 
-        public ExcelDataReader(string inputFilePath, ICollectedDataChecker collectedDataChecker)
+        public ExcelDataReader(string inputFilePath, ICollectedDataChecker collectedDataChecker, IRobotFactory robotFactory, ICollisionFactory collisionFactory)
         {
             this.inputFilePath = inputFilePath;
             this.collectedDataChecker = collectedDataChecker;
-            CollisionSets = new List<Collision>();
-            Robots = new List<Robot>();
+            this.robotFactory = robotFactory;
+            this.collisionFactory = collisionFactory;
         }
 
         public void ReadData()
@@ -68,12 +71,12 @@ namespace CollisionChecker
 
                 if (robot1 == null)
                 {
-                    robot1 = new Robot(robotName1);
+                    robot1 = robotFactory.Instance(robotName1);
                     Robots.Add(robot1);
                 }
                 if (robot2 == null)
                 {
-                    robot2 = new Robot(robotName2);
+                    robot2 = robotFactory.Instance(robotName2);
                     Robots.Add(robot2);
                 }
                 while (colNr <= lastColumn)
@@ -81,7 +84,7 @@ namespace CollisionChecker
                     colNr++;
                     if (allCells[rowNr, colNr].Value == null) continue;
                     collisionNr = (int)allCells[rowNr, colNr].Value;
-                    Collision newCollision = new Collision(collisionNr, robot1, robot2);
+                    Collision newCollision = collisionFactory.Instance(collisionNr, robot1, robot2);
                     robot1.AddCollision(newCollision);
                     robot2.AddCollision(newCollision);
                     if (!CollisionSets.Contains(newCollision)) CollisionSets.Add(newCollision);

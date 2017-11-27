@@ -31,8 +31,11 @@ namespace CollisionChecker
             }
 
             var fileType = filePathUtilities.getFileTypeByExtension(filePath);
-            if (fileType != Const.UNKNOWN) dataReader = dataReaderFactory.instance(fileType, filePath);
-            else return;
+            if (fileType != Const.UNKNOWN) dataReader = dataReaderFactory.Instance(fileType, filePath);
+            else
+            {
+                return;
+            }
 
             dataReader.ReadData();
             if (dataReader.DataIsValid())

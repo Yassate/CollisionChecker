@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualBasic.FileIO;
+﻿using CollisionChecker.LogicClasses;
+using Microsoft.VisualBasic.FileIO;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -14,13 +15,15 @@ namespace CollisionChecker
         private TextFieldParser csvParser;
         private string inputFilePath;
         private readonly ICollectedDataChecker collectedDataChecker;
+        private readonly IRobotFactory robotFactory;
+        private readonly ICollisionFactory collisionFactory;
 
-        public CsvDataReader(string inputFilePath, ICollectedDataChecker collectedDataChecker)
+        public CsvDataReader(string inputFilePath, ICollectedDataChecker collectedDataChecker, IRobotFactory robotFactory, ICollisionFactory collisionFactory)
         {
             this.inputFilePath = inputFilePath;
             this.collectedDataChecker = collectedDataChecker;
-            CollisionSets = new List<Collision>();
-            Robots = new List<Robot>();
+            this.robotFactory = robotFactory;
+            this.collisionFactory = collisionFactory;
         }
 
         private void ClearData()
@@ -73,12 +76,12 @@ namespace CollisionChecker
                 robot2 = Robots.Find(x => x.name == prevLine[1]);
                 if (robot1 == null)
                 {
-                    robot1 = new Robot(prevLine[0]);
+                    robot1 = robotFactory.Instance(prevLine[0]);
                     Robots.Add(robot1);
                 }
                 if (robot2 == null)
                 {
-                    robot2 = new Robot(prevLine[1]);
+                    robot2 = robotFactory.Instance(prevLine[1]);
                     Robots.Add(robot2);
                 }
 
@@ -86,7 +89,7 @@ namespace CollisionChecker
                 {
                     if (nr.Length == 0) continue;
                     var colNr = short.Parse(nr);
-                    Collision newCollision = new Collision(colNr, robot1, robot2);
+                    Collision newCollision = collisionFactory.Instance(colNr, robot1, robot2);
                     robot1.AddCollision(newCollision);
                     robot2.AddCollision(newCollision);
                     if (!CollisionSets.Contains(newCollision)) CollisionSets.Add(newCollision);

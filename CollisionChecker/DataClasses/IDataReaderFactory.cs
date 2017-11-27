@@ -7,6 +7,6 @@ namespace CollisionChecker
 {
     interface IDataReaderFactory
     {
-        IDataReader instance(int fileType, string inputFilePath);
+        IDataReader Instance(int fileType, string inputFilePath);
     }
 }

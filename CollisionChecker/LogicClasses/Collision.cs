@@ -11,11 +11,11 @@ namespace CollisionChecker
 
         public Collision() {}
 
-        public Collision(int nr, Robot Robot1, Robot Robot2)
+        public Collision(int nr, Robot robot1, Robot robot2)
         {
             this.nr = nr;
-            this.Robot1 = Robot1;
-            this.Robot2 = Robot2;
+            this.Robot1 = robot1;
+            this.Robot2 = robot2;
         }
 
         public bool IsTaken()

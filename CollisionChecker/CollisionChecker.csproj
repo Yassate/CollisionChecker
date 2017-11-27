@@ -101,8 +101,12 @@
     <Compile Include="DataClasses\ExcelDataReader.cs" />
     <Compile Include="DataClasses\IDataReaderFactory.cs" />
     <Compile Include="DataClasses\ICollectedDataChecker.cs" />
+    <Compile Include="LogicClasses\CollisionFactory.cs" />
+    <Compile Include="LogicClasses\ICollisionFactory.cs" />
+    <Compile Include="LogicClasses\IRobotFactory.cs" />
     <Compile Include="LogicClasses\Robot.cs" />
     <Compile Include="LogicClasses\RobotState.cs" />
+    <Compile Include="LogicClasses\RobotFactory.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
