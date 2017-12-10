@@ -7,8 +7,14 @@ using System.Windows;
 
 namespace CollisionChecker
 {
-    public class FilePathUtilities : IFilePathUtilites
+    public class FilePathUtilities : IFilePathUtilities
     {
+        private INotifier notifier;
+
+        public FilePathUtilities(INotifier notifier)
+        {
+            this.notifier = notifier;
+        }
         public bool CheckExistence(string filePath)
         {
             if(File.Exists(filePath))
@@ -17,7 +23,7 @@ namespace CollisionChecker
             }
             else
             {
-                MessageBox.Show("Entered file path is incorrect!");
+                notifier.ShowMessage("Entered file path is incorrect!");
                 return false;
             }
         }
@@ -34,7 +40,7 @@ namespace CollisionChecker
             else if (filetypeIsExcel) return Const.EXCEL;
             else
             {
-                MessageBox.Show("File extension forbidden!");
+                notifier.ShowMessage("File extension forbidden!");
                 return Const.UNKNOWN;
             }
         }

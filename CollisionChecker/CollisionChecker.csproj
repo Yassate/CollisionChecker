@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -10,8 +10,9 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>CollisionChecker</RootNamespace>
     <AssemblyName>CollisionChecker</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -41,6 +42,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -50,6 +52,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>TryVisualStudioProfessional.ico</ApplicationIcon>
@@ -67,9 +70,18 @@
     <SignManifests>true</SignManifests>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Core.4.2.0\lib\net45\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.Windsor, Version=4.0.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\Castle.Windsor.4.1.0\lib\net45\Castle.Windsor.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -88,25 +100,25 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="AdditionalClasses\Const.cs" />
-    <Compile Include="DataClasses\CollectedDataChecker.cs" />
-    <Compile Include="DataClasses\CsvDataReader.cs" />
-    <Compile Include="DataClasses\DataWriter.cs" />
+    <Compile Include="DataClasses\Classes\CollectedDataChecker.cs" />
+    <Compile Include="DataClasses\Classes\CsvDataReader.cs" />
+    <Compile Include="DataClasses\Classes\DataWriter.cs" />
     <Compile Include="AdditionalClasses\ExtensionMethods.cs" />
-    <Compile Include="DataClasses\FilePathUtilities.cs" />
-    <Compile Include="DataClasses\IDataReader.cs" />
-    <Compile Include="DataClasses\IFilePathUtilites.cs" />
-    <Compile Include="DataClasses\INotifier.cs" />
-    <Compile Include="DataClasses\Notifier.cs" />
-    <Compile Include="DataClasses\DataReaderFactory.cs" />
-    <Compile Include="DataClasses\ExcelDataReader.cs" />
-    <Compile Include="DataClasses\IDataReaderFactory.cs" />
-    <Compile Include="DataClasses\ICollectedDataChecker.cs" />
-    <Compile Include="LogicClasses\CollisionFactory.cs" />
-    <Compile Include="LogicClasses\ICollisionFactory.cs" />
-    <Compile Include="LogicClasses\IRobotFactory.cs" />
-    <Compile Include="LogicClasses\Robot.cs" />
-    <Compile Include="LogicClasses\RobotState.cs" />
-    <Compile Include="LogicClasses\RobotFactory.cs" />
+    <Compile Include="DataClasses\Classes\FilePathUtilities.cs" />
+    <Compile Include="DataClasses\Interfaces\IDataReader.cs" />
+    <Compile Include="DataClasses\Interfaces\IFilePathUtilites.cs" />
+    <Compile Include="DataClasses\Interfaces\INotifier.cs" />
+    <Compile Include="DataClasses\Classes\Notifier.cs" />
+    <Compile Include="DataClasses\Classes\DataReaderFactory.cs" />
+    <Compile Include="DataClasses\Classes\ExcelDataReader.cs" />
+    <Compile Include="DataClasses\Interfaces\IDataReaderFactory.cs" />
+    <Compile Include="DataClasses\Interfaces\ICollectedDataChecker.cs" />
+    <Compile Include="LogicClasses\Classes\CollisionFactory.cs" />
+    <Compile Include="LogicClasses\Interfaces\ICollisionFactory.cs" />
+    <Compile Include="LogicClasses\Interfaces\IRobotFactory.cs" />
+    <Compile Include="LogicClasses\Classes\Robot.cs" />
+    <Compile Include="LogicClasses\Classes\RobotState.cs" />
+    <Compile Include="LogicClasses\Classes\RobotFactory.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -115,8 +127,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LogicClasses\Collision.cs" />
-    <Compile Include="LogicClasses\ViewModel.cs" />
+    <Compile Include="LogicClasses\Classes\Collision.cs" />
+    <Compile Include="LogicClasses\Classes\ViewModel.cs" />
+    <Compile Include="MainCastleInstaller.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -140,7 +153,9 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="app.config" />
     <None Include="CollisionChecker_TemporaryKey.pfx" />
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

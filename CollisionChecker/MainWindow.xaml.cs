@@ -2,16 +2,22 @@
 using System.Collections.Generic;
 using System.Windows;
 using System.Linq;
+using Castle.Windsor;
+using Castle.Windsor.Installer;
+using CollisionChecker.LogicClasses;
 
 namespace CollisionChecker
 {
     public partial class MainWindow : Window
     {
         private ViewModel viewModel;
+        private IWindsorContainer container;
 
         public MainWindow()
         {
             InitializeComponent();
+            container = new WindsorContainer();
+            container.Install(new MainCastleInstaller());
             this.Drop += MainWindow_Drop;           //vor DragDrop; notUSED        
         }
 
@@ -38,7 +44,7 @@ namespace CollisionChecker
 
         private void ReadDataButton_Click(object sender, RoutedEventArgs e)
         {
-            this.viewModel = new ViewModel(new DataReaderFactory(), new FilePathUtilities());
+            this.viewModel = container.Resolve<ViewModel>();
             viewModel.readData(colDataPath.Text);
 
             statusLabel.Content = "Data loaded.";

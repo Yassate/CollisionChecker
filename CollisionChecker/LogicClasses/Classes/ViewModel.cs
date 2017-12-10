@@ -14,10 +14,10 @@ namespace CollisionChecker
         private int stuckCount = 0;
         private IDataReader dataReader;
         private DataWriter dataWriter;
-        private FilePathUtilities filePathUtilities;
+        private IFilePathUtilities filePathUtilities;
         private IDataReaderFactory dataReaderFactory;
 
-        public ViewModel(IDataReaderFactory dataReaderFactory, FilePathUtilities filePathUtilities)
+        public ViewModel(IDataReaderFactory dataReaderFactory, IFilePathUtilities filePathUtilities)
         {
             this.dataReaderFactory = dataReaderFactory;
             this.filePathUtilities = filePathUtilities;
@@ -25,17 +25,11 @@ namespace CollisionChecker
 
         public void readData(string filePath)
         {
-            if (filePathUtilities.CheckExistence(filePath) == false)
-            {
-                return;
-            }
+            if (filePathUtilities.CheckExistence(filePath) == false) { return; }
 
             var fileType = filePathUtilities.getFileTypeByExtension(filePath);
             if (fileType != Const.UNKNOWN) dataReader = dataReaderFactory.Instance(fileType, filePath);
-            else
-            {
-                return;
-            }
+            else { return; }
 
             dataReader.ReadData();
             if (dataReader.DataIsValid())
